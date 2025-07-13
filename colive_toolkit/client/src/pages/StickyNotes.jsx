@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { StickyNote, PlusCircle, X } from "lucide-react";
 import toast from "react-hot-toast";
+import API from "../utils/api";
 
 const StickyNotes = () => {
   const { user } = useAuth();
@@ -12,8 +12,7 @@ const StickyNotes = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/notes?userId=${user.id}`)
+    API.get(`/notes?userId=${user.id}`)
       .then((res) => setNotes(res.data))
       .catch(() => toast.error("Failed to load notes"));
   }, [user.id]);
@@ -21,11 +20,7 @@ const StickyNotes = () => {
   const addNote = async () => {
     if (!text.trim()) return toast.error("Write something first!");
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/notes",
-        { text, userId: user.id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await API.post("/notes", { text, userId: user.id });
       setNotes((prev) => [...prev, res.data]);
       setText("");
       toast.success("Note added!");
@@ -36,9 +31,7 @@ const StickyNotes = () => {
 
   const deleteNote = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/notes/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await API.delete(`/notes/${id}`);
       setNotes((prev) => prev.filter((n) => n._id !== id));
       toast.success("Note deleted");
     } catch {

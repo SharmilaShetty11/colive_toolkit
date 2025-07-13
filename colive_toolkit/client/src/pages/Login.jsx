@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 import { useRef } from "react";
 import { useEffect } from "react";
+import API from "../utils/api";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,25 +23,25 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      toast.error("Email and password are required");
+      return;
+    }
+
     try {
-      if (!email || !password) {
-        toast.error("Email and password are required");
-        return;
-      }
-      console.log("Login attempt for:", email);
+      setLoading(true);
       toast.loading("Authenticating...", { id: "login" });
 
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
-      login(res.data); // res.data = { token, user }
+      const res = await API.post("/auth/login", { email, password });
+
+      login(res.data); // { token, user }
       toast.success(`Welcome back, ${res.data.user.name}!`, { id: "login" });
       navigate("/");
-    } catch {
+    } catch (err) {
       toast.error("Login failed. Please check your credentials.", {
         id: "login",
       });
+      console.error(err);
     } finally {
       setLoading(false);
     }

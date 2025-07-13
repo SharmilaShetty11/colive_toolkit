@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useTheme } from "../context/ThemeContext";
 import toast from "react-hot-toast";
 import { Sun, Moon, UserPlus, Trash2 } from "lucide-react";
+import API from "../utils/api";
 
 const Settings = () => {
   const [newUser, setNewUser] = useState({
@@ -14,14 +14,11 @@ const Settings = () => {
 
   const [users, setUsers] = useState([]);
   const { dark, toggleTheme } = useTheme();
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/auth/users", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await API.get("/auth/users");
         setUsers(res.data);
       } catch (err) {
         toast.error("Failed to fetch users");
@@ -29,7 +26,7 @@ const Settings = () => {
       }
     };
     fetchUsers();
-  }, [token]);
+  }, []);
 
   const handleCreate = async () => {
     if (!newUser.name || !newUser.email || !newUser.password) {
@@ -38,14 +35,8 @@ const Settings = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", newUser, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const res = await axios.get("http://localhost:5000/api/auth/users", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      await API.post("/auth/register", newUser);
+      const res = await API.get("/auth/users");
       setUsers(res.data);
       setNewUser({ name: "", email: "", password: "", role: "staff" });
       toast.success("User created successfully!");
@@ -58,9 +49,7 @@ const Settings = () => {
   const deleteUser = async (id) => {
     if (!window.confirm("Are you sure?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/auth/users/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await API.delete(`/auth/users/${id}`);
       setUsers(users.filter((u) => u._id !== id));
       toast.success("User deleted");
     } catch (err) {
@@ -69,7 +58,8 @@ const Settings = () => {
     }
   };
 
-  const inputStyle = "input-style px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/90 dark:bg-white/10 text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+  const inputStyle =
+    "input-style px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/90 dark:bg-white/10 text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition";
 
   return (
     <div className="p-6 max-w-4xl mx-auto">

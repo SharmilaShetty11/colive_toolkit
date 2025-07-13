@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
 import {
   CheckCircle,
@@ -8,6 +7,7 @@ import {
   PlusCircle,
   Link as LinkIcon,
 } from "lucide-react";
+import API from "../utils/api";
 
 const Tools = () => {
   const [items, setItems] = useState([]);
@@ -17,8 +17,7 @@ const Tools = () => {
   const [link, setLink] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/groceries")
+    API.get("/groceries")
       .then((res) => setItems(res.data))
       .catch(() => toast.error("Failed to load groceries"));
   }, []);
@@ -27,7 +26,7 @@ const Tools = () => {
     if (!name || !quantity) return toast.error("Enter name and quantity");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/groceries", {
+      const res = await API.post("/groceries", {
         name,
         quantity,
         priority,
@@ -46,12 +45,9 @@ const Tools = () => {
 
   const toggleBought = async (id, current) => {
     try {
-      const res = await axios.patch(
-        `http://localhost:5000/api/groceries/${id}`,
-        {
-          bought: !current,
-        }
-      );
+      const res = await API.patch(`/groceries/${id}`, {
+        bought: !current,
+      });
       setItems((prev) => prev.map((i) => (i._id === id ? res.data : i)));
     } catch {
       toast.error("Failed to update item");
@@ -60,7 +56,7 @@ const Tools = () => {
 
   const deleteItem = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/groceries/${id}`);
+      await API.delete(`/groceries/${id}`);
       setItems((prev) => prev.filter((i) => i._id !== id));
       toast.success("Item deleted");
     } catch {
@@ -90,7 +86,7 @@ const Tools = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Item name"
-            className={"flex-1"+ inputStyle}
+            className={"flex-1" + inputStyle}
           />
           <input
             value={quantity}
