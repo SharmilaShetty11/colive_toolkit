@@ -14,17 +14,23 @@ const Dashboard = () => {
   const tools = [
     {
       href: "/tools",
-      icon: <ClipboardList className="w-6 h-6 text-indigo-500 group-hover:text-indigo-600 transition" />,
+      icon: (
+        <ClipboardList className="w-6 h-6 text-indigo-500 group-hover:text-indigo-600 transition" />
+      ),
       label: "Grocery List",
     },
     {
       href: "/sticky-notes",
-      icon: <StickyNote className="w-6 h-6 text-emerald-500 group-hover:text-emerald-600 transition" />,
+      icon: (
+        <StickyNote className="w-6 h-6 text-emerald-500 group-hover:text-emerald-600 transition" />
+      ),
       label: "Sticky Notes",
     },
     {
       href: "/settings",
-      icon: <SettingsIcon className="w-6 h-6 text-cyan-500 group-hover:text-cyan-600 transition" />,
+      icon: (
+        <SettingsIcon className="w-6 h-6 text-cyan-500 group-hover:text-cyan-600 transition" />
+      ),
       label: "Settings",
     },
   ];
@@ -40,16 +46,16 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {tools.map(({ href, icon, label }) => (
-          <a
+          <Link
             key={label}
-            href={href}
+            to={href}
             className="group p-6 rounded-2xl border border-transparent bg-white/70 dark:bg-slate-900/60 backdrop-blur-md shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.03] hover:border-indigo-300 dark:hover:border-indigo-500"
           >
             <div className="mb-3">{icon}</div>
             <div className="text-lg font-semibold text-gray-800 dark:text-gray-100">
               {label}
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </div>
