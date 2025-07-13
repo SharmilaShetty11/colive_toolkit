@@ -34,6 +34,13 @@ const Dashboard = () => {
       ),
       label: "Settings",
     },
+    {
+      href: "/HealthLog",
+      icon: (
+        <SettingsIcon className="w-6 h-6 text-cyan-500 group-hover:text-cyan-600 transition" />
+      ),
+      label: "Health Log",
+    },
   ];
 
   return (

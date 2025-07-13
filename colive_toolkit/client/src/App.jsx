@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import StickyNotes from "./pages/StickyNotes";
 import { Toaster } from "react-hot-toast";
+import HealthLog from "./pages/HealthLog";
 
 function App() {
   return (
@@ -66,6 +67,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <StickyNotes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="HealthLog"
+            element={
+              <ProtectedRoute>
+                <HealthLog />
               </ProtectedRoute>
             }
           />

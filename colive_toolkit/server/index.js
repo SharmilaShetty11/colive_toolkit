@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import groceryRoutes from "./routes/grocery.js";
 import authRoutes from './routes/auth.js';
 import noteRoutes from './routes/notes.js';
+import healthRoutes from './routes/health.js';
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 app.use("/api/groceries", groceryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/health", healthRoutes);
 
 const PORT = process.env.PORT || 7000;
 
